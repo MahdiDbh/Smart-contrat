@@ -1,28 +1,49 @@
-REMIX DEFAULT WORKSPACE
+# ByCoffeContract
 
-Remix default workspace is present when:
-i. Remix loads for the very first time 
-ii. A new workspace is created with 'Default' template
-iii. There are no files existing in the File Explorer
+A simple Solidity smart contract for tipping a recipient, with an automatic fee (tax) going to the webmaster. This contract enables anyone to send tips to a specified recipient, deducting a percentage as a webmaster fee.
 
-This workspace contains 3 directories:
+## Features
 
-1. 'contracts': Holds three contracts with increasing levels of complexity.
-2. 'scripts': Contains four typescript files to deploy a contract. It is explained below.
-3. 'tests': Contains one Solidity test file for 'Ballot' contract & one JS test file for 'Storage' contract.
+- Tip any recipient address.
+- 30% of each tip is automatically sent to the webmaster.
+- Owner can set or update the webmaster address.
+- All transactions are payable in Ether.
 
-SCRIPTS
 
-The 'scripts' folder has four typescript files which help to deploy the 'Storage' contract using 'web3.js' and 'ethers.js' libraries.
+## How It Works
 
-For the deployment of any other contract, just update the contract name from 'Storage' to the desired contract and provide constructor arguments accordingly 
-in the file `deploy_with_ethers.ts` or  `deploy_with_web3.ts`
+1. **Set Webmaster:**  
+   The contract owner (or any user) sets the webmaster address using `setWebmaster(address _webmaster)`.
+2. **Tip a Recipient:**  
+   Any user can call `tipRecipist(address _recipist)` with Ether, specifying the recipient’s address.  
+   - 70% of the sent Ether is forwarded to the recipient.
+   - 30% is sent to the webmaster as a fee.
 
-In the 'tests' folder there is a script containing Mocha-Chai unit tests for 'Storage' contract.
+## Functions
 
-To run a script, right click on file name in the file explorer and click 'Run'. Remember, Solidity file must already be compiled.
-Output from script will appear in remix terminal.
+### setWebmaster
 
-Please note, require/import is supported in a limited manner for Remix supported modules.
-For now, modules supported by Remix are ethers, web3, swarmgw, chai, multihashes, remix and hardhat only for hardhat.ethers object/plugin.
-For unsupported modules, an error like this will be thrown: '<module_name> module require is not supported by Remix IDE' will be shown.
+```solidity
+function setWebmaster(address _webmaster) public
+```
+- **Description:** Assigns a webmaster address to receive a percentage of each tip.
+- **Requirements:** The provided address must not be the zero address.
+
+### tipRecipist
+
+```solidity
+function tipRecipist(address _recipist) public payable
+```
+- **Description:** Sends a tip to the specified recipient, and the webmaster receives a 30% fee.
+- **Requirements:**
+  - The recipient and webmaster addresses must be set and valid.
+  - `msg.value` must be greater than 0.
+
+
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+If you have specific usage instructions or want to add more details, let me know!
